@@ -21,10 +21,7 @@ class Obstacle:
         closest_y = max(self.y, min(robot_y, self.y + self.height))
         distance = np.sqrt((robot_x - closest_x) ** 2 + (robot_y - closest_y) ** 2)
 
-        safety_distance = 2.0
-        if distance < safety_distance:
-            return np.exp((safety_distance - distance) * 2)
-        return 0
+        return np.exp(1 / distance)
 
     def draw(self, ax):
         rect = Rectangle(
@@ -41,7 +38,7 @@ class Obstacle:
             self.width + 4,
             self.height + 4,
             facecolor="yellow",
-            alpha=0.1,
+            alpha=0.2,
             linestyle="--",
             edgecolor="orange",
         )
@@ -120,7 +117,7 @@ class MPCController:
 
                 for obstacle in obstacles:
                     distance_cost = obstacle.distance_cost(x_next[0], x_next[1])
-                    cost += distance_cost * 0.5
+                    cost += distance_cost
 
                 target = np.array(waypoints[0])
                 error = x_next - target
@@ -237,6 +234,13 @@ class RobotSimulation:
         self.window.geometry("800x600+100+100")
         self.window.mainloop()
 
+    def save_gif(self, filename="robot_simulation.gif", total_time=20, dt=0.1):
+        times = np.arange(0, total_time, dt)
+        anim = FuncAnimation(
+            self.fig, self.update, frames=times, repeat=False, blit=False
+        )
+        anim.save(filename, writer="imagemagick", fps=30)
+
 
 def main():
     initial_x = 1.0
@@ -265,7 +269,7 @@ def main():
     ]
 
     simulation = RobotSimulation(robot, waypoints, obstacles)
-    simulation.run()
+    simulation.save_gif()
 
 
 if __name__ == "__main__":

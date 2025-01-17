@@ -1,6 +1,7 @@
 # Robot Simulation with MPC and Obstacles
 
 This project implements a robot simulation using the Model Predictive Control (MPC) approach to navigate the robot from a starting point to a target point while avoiding obstacles. The robot is controlled by a cost function that considers both the distance to target waypoints and the proximity to obstacles. The project uses the `matplotlib` library for visualization and `scipy` for optimizing the MPC.
+![Simulation GIF](robot_simulation.gif)
 
 ## Project Structure
 
